@@ -60,7 +60,7 @@ public abstract class Data {
 		return val;
 	}
 
-	// print Customer Data
+	// prints all Customer Data
 	static boolean customerData() {
 		System.out.println("-----------------------------------------");
 		System.out.println("\t \t* Customer DETAILS *");
@@ -72,6 +72,29 @@ public abstract class Data {
 			System.out.println("-------------");
 		}
 		System.out.println("No. Customers :  \t" + Customer.getCustomerCount());
+		return false;
+	}
+
+	// payment by the customer
+	static void customerPayment(String name, String pass, float amount, int tripID) {
+		getCustomer(name, pass).newTrip(tripsInfo.get(tripID));
+		getCustomer(name, pass).payBill(amount, tripsInfo.get(tripID));
+		stopTrip(tripsInfo.get(tripID));
+	}
+
+	// prints specified customer data
+	static boolean myDataOfCustomer(Customer c) {
+		System.out.println("-----------------------------------------");
+		System.out.println("\t \t* Your DETAILS *");
+		System.out.println("-----------------------------------------");
+
+		customerInfo.indexOf(c);
+
+		System.out.println("Name: \t" + c.getCustomerName());
+		System.out.println("Balance Cash: \t" + c.getBalanceCash());
+		System.out.println("Trips : \t" + c.getTripCount());
+		System.out.println("Previous Trip:  \t" + c.getLastTrip());
+		System.out.println("-------------");
 		return false;
 	}
 //##################################################### END OF CUSTOMERS
@@ -86,23 +109,49 @@ public abstract class Data {
 		return true;
 	}
 
-	// checks if the customer exists or not
+	// checks if the route exists or not
 	static boolean routeExists(String routeName) {
 		for (Route val : routeInfo) {
-			if (routeName.equals(val.getRouteName()))
+			if (routeName.equalsIgnoreCase(val.getRouteName()))
 				return true;
 		}
 
 		return false;
 	}
 
+	// Return route
+	static Route getRoute(String routeName) {
+		for (Route route : routeInfo) {
+			if (routeName.equalsIgnoreCase(route.getRouteName()))
+				return route;
+		}
+
+		return null;
+	}
+
+	static boolean routeDetails(Route r) {
+		if (r != null) {
+			System.out.println("||                                   ");
+			System.out.println("|| Route Name:" + r.getRouteName());
+			System.out.println("|| Distance : " + r.getDistanceInKm() + "Km");
+			System.out.println("|| Address :" + r.getFullAddress());
+			System.out.println("|| Tax  :" + Finanance.getTripCoast(r.getDistanceInKm())[2]);
+			System.out.println("|| Cess :" + Finanance.getTripCoast(r.getDistanceInKm())[1]);
+			System.out.println("|| G. Total :" + Finanance.getTripCoast(r.getDistanceInKm())[0]);
+			System.out.println("||                                   ");
+			return true;
+		}
+		return false;
+	}
+
 	// print Route Data
 	static boolean routeData() {
+		int counter = 0;
 		System.out.println("-----------------------------------------");
 		System.out.println("\t \t* ROUTE DETAILS *");
 		System.out.println("-----------------------------------------");
 		for (Route r : routeInfo) {
-
+			System.out.println("OPTION NO:\t" + counter++);
 			System.out.println("Route Name: \t" + r.getRouteName());
 			System.out.println("Address: \t" + r.getFullAddress());
 			System.out.println("Distance: \t" + r.getDistanceInKm() + " Km");
@@ -134,11 +183,17 @@ public abstract class Data {
 		return false;
 	}
 
-	static Car nextAvailableCar() {
+	// sends an available car
+	static Car nextAvailableCar(int countOfCustomer) {
+
 		for (Car c : carsInfo) {
-			if (c.getAvailability())
+			if (c.getAvailability() && c.getCapacity() >= countOfCustomer) {
 				return c;
+
+			}
+
 		}
+
 		return null;
 	}
 
@@ -162,17 +217,24 @@ public abstract class Data {
 
 // #################################################### START OF TRIP
 	// start the trip
-	static boolean newTrip(Route route, Customer customer, boolean inTransit, Car car) {
+	static Trip newTrip(Route route, Customer customer, Car car, int countTravellers) {
 
 		if (route == null || customer == null || car == null)
-			return false;
-		tripsInfo.add(new Trip(route, customer, inTransit, nextAvailableCar()));
-		return true;
+			return null;
+		tripsInfo.add(new Trip(route, customer, nextAvailableCar(countTravellers), countTravellers));
+		return tripsInfo.get(tripsInfo.size() - 1);
+	}
+
+	static Trip getTripByID(int id) {
+		return tripsInfo.get(id);
 	}
 
 	// stop the trip
 	static boolean stopTrip(Trip t) {
-		t.endTransit();
+		if (t != null) {
+			t.endTransit();
+			t.getCar().changeAvailablity();
+		}
 		return true;
 	}
 
@@ -183,6 +245,7 @@ public abstract class Data {
 		System.out.println("-----------------------------------------");
 		for (Trip t : tripsInfo) {
 
+			System.out.println("ID : \t" + t.getID());
 			System.out.println("Route Name: \t" + t.getRoute().getRouteName());
 			System.out.println("Customers Name: \t" + t.getCustomer().getCustomerName());
 			System.out.println("Cars Number: \t" + t.getCar().getNumberPlate());
