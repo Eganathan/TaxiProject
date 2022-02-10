@@ -1,57 +1,84 @@
 package playground;
 
-//import java.util.ArrayList;
+import java.util.Date;
 
-public class Customer {
+public class Trip {
 
-	private final String customerName;
-	private int tripCount;
-	private static int customerCount;
-	private float loadedCash;
-	private String password;
-	//private ArrayList pastTrips;
-	//private ArrayList upcommingTrips;
-	
+	private Route route;
+	private Customer customer;
+	private Date startTime;
+	private Date endTime;
+	private static int tripCount;
+	private boolean inTransit;
+	private Car car;
+	private int countTravellers;
+	private final int ID = tripCount++;
 
-	Customer(String name,int cash, String pass){
-		this.customerName = name;
-		this.loadedCash = cash;
-		this.password = pass;
-		customerCount++;
-	}
-	
-	//--------------------------> GETTERS
-	public int getTripCount() {
-		return this.tripCount;
+	Trip(Route route, Customer customer, Car car, int countTravellers) {
+		this.route = route;
+		this.customer = customer;
+		this.countTravellers = countTravellers;
+		this.car = car;
 	}
 
-	public String getCustomerName() {
-		return this.customerName;
+//-----------------------------------------------> GETTERS
+
+	public Route getRoute() {
+		return route;
 	}
 
-	public static int getCustomerCount() {
-		return customerCount;
+	public Customer getCustomer() {
+		System.out.println(customer.getCustomerName() + "> getCustomer();");
+		return customer;
 	}
-	
-	public float getBalanceCash() {
-		return this.loadedCash;
+
+	public static int getTripCount() {
+		return tripCount;
 	}
-	
-	public String getPassword() {
-		return this.password;
+
+	public boolean getAvailability() {
+		return this.inTransit;
 	}
-	
-	//-------------------------SETTERS
-	public void setTripCount(int tripCount) {
-		this.tripCount = tripCount;
+
+	public Date getStartTime() {
+		return startTime;
 	}
-	public void loadCash(int cash) {
-		this.loadedCash += cash;
+
+	public Date getEndTime() {
+		return endTime;
 	}
-	
-	public void payBill(float amount)
-	{
-		this.loadedCash -= amount;
+
+	public Car getCar() {
+		return car;
+	}
+
+	public int GetTravellerCount() {
+		return this.countTravellers;
+	}
+
+	int getID() {
+		return this.ID;
+	}
+	// -----------------------------------------------> SETTERS
+
+	public void startTransit() {
+		this.car.changeAvailablity();
+		this.inTransit = true;
+		this.startTime = new Date();
+
+	}
+
+	public boolean inTransit() {
+		return this.inTransit = true;
+	}
+
+	public void endTransit() {
+		this.endTime = new Date();
+		this.inTransit = false;
+	}
+
+	public float tripCost() {
+		return Finanance.getTripCoast(route.getDistanceInKm())[0];
 	}
 
 }
