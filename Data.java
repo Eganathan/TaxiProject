@@ -144,7 +144,7 @@ public abstract class Data {
 		}
 		return false;
 	}
-	
+
 	static ArrayList<String> getRouteNameList() {
 		ArrayList<String> routeNames = new ArrayList<String>();
 
@@ -153,7 +153,7 @@ public abstract class Data {
 				routeNames.add(r.getRouteName());
 			}
 		}
-		
+
 		return routeNames;
 	}
 
@@ -230,11 +230,11 @@ public abstract class Data {
 
 // #################################################### START OF TRIP
 	// start the trip
-	static Trip newTrip(Route route, Customer customer, Car car, int countTravellers)
-	{
+	static Trip newTrip(Route route, Customer customer, Car car, int countTravellers) {
 		if (route == null || customer == null || car == null)
 			return null;
 		tripsInfo.add(new Trip(route, customer, nextAvailableCar(countTravellers), countTravellers));
+		customer.pastTrips.add(tripsInfo.get( tripsInfo.size()-1));
 		return tripsInfo.get(tripsInfo.size() - 1);
 	}
 

@@ -10,7 +10,7 @@ public class Customer {
 	private static int customerCount;
 	private float loadedCash;
 	private String password;
-	private ArrayList<Trip> pastTrips = new ArrayList<Trip>();
+	 ArrayList<Trip> pastTrips = new ArrayList<Trip>();
 	private Stack<Trip> currentTrips = new Stack<Trip>();
 
 	Customer(String name, int cash, String pass) {

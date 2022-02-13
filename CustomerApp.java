@@ -6,6 +6,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
 import java.awt.Dialog.ModalExclusionType;
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
@@ -58,9 +60,12 @@ public class CustomerApp extends JFrame implements ActionListener {
 	private JTextField loadInput;
 	private JTextField textField_2;
 	private JLabel lblMSG;
+	private String[] titlesArr;
+	private String[][] dataArr;
 
 	private Route r;
 	private Trip holdedTrip;
+	private DefaultTableModel model;
 
 	private int passengers;
 
@@ -310,14 +315,23 @@ public class CustomerApp extends JFrame implements ActionListener {
 		pnlLoadCash.add(lblNewLabel_3);
 
 		JPanel pnlPrevTrips = new JPanel();
+		pnlPrevTrips.setBackground(new Color(255, 255, 255));
 		tabbedPane.addTab("New tab", null, pnlPrevTrips, null);
-		pnlPrevTrips.setLayout(new BorderLayout(0, 0));
 
-		tblPastTrips = new JTable();
-		tblPastTrips.setEnabled(false);
-		tblPastTrips.setBackground(new Color(72, 61, 139));
-		tblPastTrips.setFont(new Font("Sitka Display", Font.ITALIC, 17));
-		pnlPrevTrips.add(tblPastTrips, BorderLayout.CENTER);
+		model = new DefaultTableModel(dataArr, titlesArr);
+		pnlPrevTrips.setLayout(new BorderLayout(0, 0));
+		tblPastTrips = new JTable(model);
+		tblPastTrips.setSize(new Dimension(5, 5));
+		tblPastTrips.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tblPastTrips.setIntercellSpacing(new Dimension(1, 5));
+		tblPastTrips.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
+		tblPastTrips.setAutoCreateRowSorter(true);
+		tblPastTrips.setRowSelectionAllowed(false);
+		tblPastTrips.setBorder(new EmptyBorder(5, 5, 5, 5));
+		tblPastTrips.setFillsViewportHeight(true);
+		tblPastTrips.setBackground(new Color(255, 255, 255));
+		tblPastTrips.setFont(new Font("Sitka Display", Font.ITALIC, 16));
+		pnlPrevTrips.add(tblPastTrips);
 
 		JPanel pnsSettings = new JPanel();
 		pnsSettings.setBackground(new Color(72, 61, 139));
@@ -385,6 +399,8 @@ public class CustomerApp extends JFrame implements ActionListener {
 		btnAccSettings.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(4);
+
+				loadPastTripTable();
 			}
 		});
 		leftPanel.add(btnAccSettings);
@@ -427,6 +443,32 @@ public class CustomerApp extends JFrame implements ActionListener {
 		}
 
 		lblMSG.setText(s);
+
+	}
+
+	void loadPastTripTable() {
+		// tblPastTrips
+		// titlesArr;
+		// private String[][] dataArr;
+
+		titlesArr = new String[] { "Destination", "Start", "End", "Distance", "Cost" };
+		dataArr = new String[22][10];
+		if (cUser.pastTrips != null) {
+			int counter = 0;
+			for (Trip t : cUser.pastTrips) {
+				// System.out.println( t.getRoute().getRouteName());
+				dataArr[counter][0] = t.getRoute().getRouteName();
+				dataArr[counter][1] = t.getStartTime().toString();
+				dataArr[counter][2] = t.getEndTime().toString();
+				dataArr[counter][3] = String.valueOf(t.getRoute().getDistanceInKm());
+				dataArr[counter][4] = String.valueOf(Finanance.getTripCoast(t.getRoute().getDistanceInKm())[0]);
+
+				model.addRow(dataArr[counter]);
+				counter++;
+			}
+
+			// addRow(dataArr[counter]);
+		}
 
 	}
 
