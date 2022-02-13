@@ -1,6 +1,7 @@
 package playground;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public abstract class Data {
 
@@ -142,6 +143,18 @@ public abstract class Data {
 			return true;
 		}
 		return false;
+	}
+	
+	static ArrayList<String> getRouteNameList() {
+		ArrayList<String> routeNames = new ArrayList<String>();
+
+		if (routeInfo != null) {
+			for (Route r : routeInfo) {
+				routeNames.add(r.getRouteName());
+			}
+		}
+		
+		return routeNames;
 	}
 
 	// print Route Data

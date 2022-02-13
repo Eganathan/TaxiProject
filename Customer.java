@@ -1,84 +1,75 @@
 package playground;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Stack;
 
-public class Trip {
+public class Customer {
 
-	private Route route;
-	private Customer customer;
-	private Date startTime;
-	private Date endTime;
-	private static int tripCount;
-	private boolean inTransit;
-	private Car car;
-	private int countTravellers;
-	private final int ID = tripCount++;
+	private final String customerName;
+	private int tripCount;
+	private static int customerCount;
+	private float loadedCash;
+	private String password;
+	private ArrayList<Trip> pastTrips = new ArrayList<Trip>();
+	private Stack<Trip> currentTrips = new Stack<Trip>();
 
-	Trip(Route route, Customer customer, Car car, int countTravellers) {
-		this.route = route;
-		this.customer = customer;
-		this.countTravellers = countTravellers;
-		this.car = car;
+	Customer(String name, int cash, String pass) {
+		this.customerName = name;
+		this.loadedCash = cash;
+		this.password = pass;
+		customerCount++;
 	}
 
-//-----------------------------------------------> GETTERS
-
-	public Route getRoute() {
-		return route;
+	// --------------------------> GETTERS
+	public int getTripCount() {
+		return this.tripCount;
 	}
 
-	public Customer getCustomer() {
-		System.out.println(customer.getCustomerName() + "> getCustomer();");
-		return customer;
+	public String getCustomerName() {
+		return this.customerName;
 	}
 
-	public static int getTripCount() {
-		return tripCount;
+	public static int getCustomerCount() {
+		return customerCount;
 	}
 
-	public boolean getAvailability() {
-		return this.inTransit;
+	public float getBalanceCash() {
+		return this.loadedCash;
 	}
 
-	public Date getStartTime() {
-		return startTime;
+	public String getPassword() {
+		return this.password;
 	}
 
-	public Date getEndTime() {
-		return endTime;
+	public String getLastTrip() {
+		if (pastTrips.size() > 1)
+			return this.pastTrips.get(pastTrips.size() - 1).toString();
+		return "0";
 	}
 
-	public Car getCar() {
-		return car;
+	public Trip getLastTripObject() {
+		if (this.currentTrips.peek() != null)
+			return this.currentTrips.peek();
+
+		return null;
 	}
 
-	public int GetTravellerCount() {
-		return this.countTravellers;
+	// -------------------------SETTERS
+	public void loadCash(int cash) {
+		this.loadedCash += cash;
 	}
 
-	int getID() {
-		return this.ID;
-	}
-	// -----------------------------------------------> SETTERS
-
-	public void startTransit() {
-		this.car.changeAvailablity();
-		this.inTransit = true;
-		this.startTime = new Date();
+	public void payBill(float amount, Trip t) {
+		this.loadedCash -= amount;
+		this.tripCount++;
+		this.pastTrips.add(t);
+		Finanance.addToBank(amount);
 
 	}
 
-	public boolean inTransit() {
-		return this.inTransit = true;
-	}
-
-	public void endTransit() {
-		this.endTime = new Date();
-		this.inTransit = false;
-	}
-
-	public float tripCost() {
-		return Finanance.getTripCoast(route.getDistanceInKm())[0];
+	Trip newTrip(Trip t) {
+		currentTrips.add(t);
+		return t;
 	}
 
 }

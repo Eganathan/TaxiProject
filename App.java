@@ -196,8 +196,5 @@ public class App {
 	void msg(String s) {
 		System.out.println(s);
 	}
-//to be removed!! 
-void remove() {
-}
 
 }
