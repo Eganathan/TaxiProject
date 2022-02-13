@@ -230,8 +230,8 @@ public abstract class Data {
 
 // #################################################### START OF TRIP
 	// start the trip
-	static Trip newTrip(Route route, Customer customer, Car car, int countTravellers) {
-
+	static Trip newTrip(Route route, Customer customer, Car car, int countTravellers)
+	{
 		if (route == null || customer == null || car == null)
 			return null;
 		tripsInfo.add(new Trip(route, customer, nextAvailableCar(countTravellers), countTravellers));

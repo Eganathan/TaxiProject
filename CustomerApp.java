@@ -37,6 +37,8 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Cursor;
 import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class CustomerApp extends JFrame implements ActionListener {
 
@@ -45,13 +47,22 @@ public class CustomerApp extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Customer cUser;
-	private JPanel contentPane , pnlCarDetails;
+	private JPanel contentPane, pnlCarDetails;
 	private JTable tblPastTrips;
-	private JTextField inputSearchBar , inpCapacity;
-	private JButton btnRequesTrip;
+	private JTextField inputSearchBar, inpCapacity;
+	private JButton btnRequesTrip, btnStartOrStop;
 	private JList<String> list;
-	private JLabel lblCarNumberPlate, lblGTotal, lblRouteName,lblTravellerCapacity ,lblDistance ;
+	private JLabel lblCarNumberPlate, lblGTotal, lblRouteName, lblTravellerCapacity, lblDistance, tripCountLbl, balLbl,
+			balanceInfoLabel;
 	private JTextField textField;
+	private JTextField loadInput;
+	private JTextField textField_2;
+	private JLabel lblMSG;
+
+	private Route r;
+	private Trip holdedTrip;
+
+	private int passengers;
 
 	public CustomerApp(Customer cCustomer) {
 		cUser = cCustomer;
@@ -87,16 +98,16 @@ public class CustomerApp extends JFrame implements ActionListener {
 		customerNameLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		topUserPane.add(customerNameLabel);
 
-		JLabel lblNewLabel = new JLabel("No. Trips:  ");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		topUserPane.add(lblNewLabel);
+		tripCountLbl = new JLabel("No. Trips:" + cUser.getTripCount());
+		tripCountLbl.setHorizontalAlignment(SwingConstants.RIGHT);
+		topUserPane.add(tripCountLbl);
 
-		JLabel balLbl = new JLabel("0");
+		balLbl = new JLabel("");
 		balLbl.setFont(new Font("Tahoma", Font.ITALIC, 17));
 		balLbl.setHorizontalAlignment(SwingConstants.LEFT);
 		topUserPane.add(balLbl);
 
-		JLabel balanceInfoLabel = new JLabel("Cash: " + String.valueOf(cUser.getBalanceCash()));
+		balanceInfoLabel = new JLabel("Cash: " + String.valueOf(cUser.getBalanceCash()));
 		balanceInfoLabel.setFont(new Font("Tahoma", Font.ITALIC, 17));
 		balanceInfoLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		topUserPane.add(balanceInfoLabel);
@@ -143,11 +154,10 @@ public class CustomerApp extends JFrame implements ActionListener {
 		inputSearchBar.setFont(new Font("Tahoma", Font.ITALIC, 17));
 		pnlNewTripTop.add(inputSearchBar, BorderLayout.NORTH);
 		inputSearchBar.setColumns(10);
-		
-		
+
 		DefaultListModel<String> lm = new DefaultListModel<String>();
 		lm.addAll(Data.getRouteNameList());
-		
+
 		list = new JList<String>(lm);
 		list.setValueIsAdjusting(true);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -157,44 +167,33 @@ public class CustomerApp extends JFrame implements ActionListener {
 		list.setFont(new Font("Verdana", Font.ITALIC, 14));
 		list.setBackground(new Color(72, 61, 139));
 		pnlNewTripTop.add(list, BorderLayout.CENTER);
-		
-		
+
 		JPanel pnlCapacity = new JPanel();
 		pnlCapacity.setBounds(new Rectangle(0, 0, 7, 100));
 		pnlCapacity.setSize(new Dimension(0, 200));
 		pnlCapacity.setForeground(new Color(255, 255, 255));
 		pnlCapacity.setBackground(new Color(72, 61, 139));
-			pnlCapacity.setLayout(new BorderLayout(0, 0));
-		
-			JLabel lblNewLabel_2 = new JLabel("No. Travellers :");
-			lblNewLabel_2.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
-			lblNewLabel_2.setHorizontalAlignment(SwingConstants.TRAILING);
-			lblNewLabel_2.setForeground(new Color(255, 255, 255));
-			pnlCapacity.add(lblNewLabel_2, BorderLayout.CENTER);
-		
+		pnlCapacity.setLayout(new BorderLayout(0, 0));
+
+		JLabel lblNewLabel_2 = new JLabel("No. Travellers :");
+		lblNewLabel_2.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		lblNewLabel_2.setHorizontalAlignment(SwingConstants.TRAILING);
+		lblNewLabel_2.setForeground(new Color(255, 255, 255));
+		pnlCapacity.add(lblNewLabel_2, BorderLayout.CENTER);
+
 		inpCapacity = new JTextField();
 		inpCapacity.setFont(new Font("Tahoma", Font.BOLD, 20));
 		inpCapacity.setColumns(4);
 		pnlCapacity.add(inpCapacity, BorderLayout.EAST);
 
 		pnlNewTripTop.add(pnlCapacity, BorderLayout.SOUTH);
-		
+
 		btnRequesTrip = new JButton("Request Trip");
 		btnRequesTrip.addActionListener(this);
 		btnRequesTrip.setForeground(new Color(0, 0, 0));
 		btnRequesTrip.setFont(new Font("Segoe UI Historic", Font.BOLD, 15));
 		btnRequesTrip.setBackground(new Color(154, 205, 50));
 		pnlCapacity.add(btnRequesTrip, BorderLayout.SOUTH);
-
-		
-		
-		JPanel pnlUpdate = new JPanel();
-		pnlUpdate.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		pnlUpdate.setBackground(new Color(154, 205, 50));
-		pnlNewTrip.add(pnlUpdate, BorderLayout.SOUTH);
-		
-		JLabel lblUpdateText = new JLabel("New label");
-		pnlUpdate.add(lblUpdateText);
 
 		JPanel pnlNewTripEast = new JPanel();
 		pnlNewTripEast.setMinimumSize(new Dimension(25, 25));
@@ -211,7 +210,7 @@ public class CustomerApp extends JFrame implements ActionListener {
 
 		JPanel pnlCarDetails = new JPanel();
 		pnlCarDetails.setAutoscrolls(true);
-		pnlCarDetails.setBorder(new EmptyBorder(5,5,5,5));
+		pnlCarDetails.setBorder(new EmptyBorder(5, 5, 5, 5));
 		pnlCarDetails.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		pnlCarDetails.setBackground(new Color(255, 255, 255));
 		pnlNewTripEast.add(pnlCarDetails, BorderLayout.CENTER);
@@ -257,7 +256,7 @@ public class CustomerApp extends JFrame implements ActionListener {
 		lblTravellerCapacity.setFont(new Font("Tahoma", Font.BOLD, 10));
 		pnlCarDetails.add(lblTravellerCapacity);
 
-		JLabel lblNewLabel_7_1_1 = new JLabel("Total Coast :");
+		JLabel lblNewLabel_7_1_1 = new JLabel("Total Cost :");
 		lblNewLabel_7_1_1.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblNewLabel_7_1_1.setHorizontalAlignment(SwingConstants.LEFT);
 		pnlCarDetails.add(lblNewLabel_7_1_1);
@@ -266,28 +265,80 @@ public class CustomerApp extends JFrame implements ActionListener {
 		lblGTotal.setHorizontalAlignment(SwingConstants.CENTER);
 		lblGTotal.setFont(new Font("Tahoma", Font.BOLD, 12));
 		pnlCarDetails.add(lblGTotal);
-		
+
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(new Color(72, 61, 139));
 		pnlNewTrip.add(panel_1, BorderLayout.CENTER);
 		panel_1.setLayout(new BorderLayout(0, 0));
-		
-		JButton btnStartOrStop = new JButton("Start ");
+
+		btnStartOrStop = new JButton("Start ");
 		panel_1.add(btnStartOrStop, BorderLayout.SOUTH);
+		btnStartOrStop.setEnabled(false);
+		btnStartOrStop.addActionListener(this);
 
 		JPanel pnlLoadCash = new JPanel();
+		pnlLoadCash.setBackground(new Color(72, 61, 139));
 		tabbedPane.addTab("New tab", null, pnlLoadCash, null);
+		pnlLoadCash.setLayout(null);
+
+		loadInput = new JTextField();
+		loadInput.setHorizontalAlignment(SwingConstants.CENTER);
+		loadInput.setFont(new Font("Tahoma", Font.BOLD, 18));
+		loadInput.setBounds(132, 102, 169, 61);
+		pnlLoadCash.add(loadInput);
+		loadInput.setColumns(10);
+
+		JButton btnNewButton = new JButton("Add Amount");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (Integer.valueOf(loadInput.getText()) > 0) {
+					addMoney(Integer.valueOf(loadInput.getText()));
+					updateLog("Amount lodded sucessfully...", true);
+				} else {
+					updateLog("Something Wrong..Please Try again..", false);
+				}
+			}
+		});
+		btnNewButton.setBounds(164, 185, 113, 40);
+		pnlLoadCash.add(btnNewButton);
+
+		JLabel lblNewLabel_3 = new JLabel("Load Cash");
+		lblNewLabel_3.setForeground(new Color(255, 255, 255));
+		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_3.setFont(new Font("Tahoma", Font.BOLD, 17));
+		lblNewLabel_3.setBounds(132, 59, 169, 21);
+		pnlLoadCash.add(lblNewLabel_3);
 
 		JPanel pnlPrevTrips = new JPanel();
 		tabbedPane.addTab("New tab", null, pnlPrevTrips, null);
 		pnlPrevTrips.setLayout(new BorderLayout(0, 0));
 
 		tblPastTrips = new JTable();
+		tblPastTrips.setEnabled(false);
+		tblPastTrips.setBackground(new Color(72, 61, 139));
 		tblPastTrips.setFont(new Font("Sitka Display", Font.ITALIC, 17));
 		pnlPrevTrips.add(tblPastTrips, BorderLayout.CENTER);
 
 		JPanel pnsSettings = new JPanel();
+		pnsSettings.setBackground(new Color(72, 61, 139));
 		tabbedPane.addTab("New tab", null, pnsSettings, null);
+		pnsSettings.setLayout(null);
+
+		JLabel lblNewLabel_5 = new JLabel("Change Password");
+		lblNewLabel_5.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_5.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 17));
+		lblNewLabel_5.setForeground(new Color(255, 255, 255));
+		lblNewLabel_5.setBounds(120, 140, 202, 30);
+		pnsSettings.add(lblNewLabel_5);
+
+		textField_2 = new JTextField();
+		textField_2.setBounds(120, 181, 202, 37);
+		pnsSettings.add(textField_2);
+		textField_2.setColumns(10);
+
+		JButton btnNewButton_1 = new JButton("Update");
+		btnNewButton_1.setBounds(155, 229, 138, 37);
+		pnsSettings.add(btnNewButton_1);
 
 		JPanel leftPanel = new JPanel();
 		leftPanel.setBackground(new Color(75, 0, 130));
@@ -343,7 +394,7 @@ public class CustomerApp extends JFrame implements ActionListener {
 		btnLogOut.setBackground(new Color(75, 0, 130));
 		btnLogOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tabbedPane.setSelectedIndex(5);
+				logoff();
 			}
 		});
 		leftPanel.add(btnLogOut);
@@ -357,48 +408,131 @@ public class CustomerApp extends JFrame implements ActionListener {
 			}
 		});
 		leftPanel.add(btnExit);
+
+		lblMSG = new JLabel("Welcome Back ...");
+		lblMSG.setFont(new Font("Tahoma", Font.PLAIN, 12));
+
+		lblMSG.setOpaque(true);
+		lblMSG.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMSG.setForeground(new Color(75, 0, 130));
+		lblMSG.setBackground(new Color(60, 179, 113));
+		contentPane.add(lblMSG, BorderLayout.SOUTH);
+	}
+
+	void updateLog(String s, boolean r) {
+		if (r) {
+			lblMSG.setBackground(new Color(154, 205, 50));
+		} else {
+			lblMSG.setBackground(new Color(255, 160, 122));
+		}
+
+		lblMSG.setText(s);
+
+	}
+
+	void reload() {
+
+		tripCountLbl.setText("No. Trips " + cUser.getTripCount());
+		balanceInfoLabel.setText("Cash :" + cUser.getBalanceCash());
+	}
+
+	void generateBill(Route r) {
+
+		updateLog("WoW You have enough cash....", true);
+		lblCarNumberPlate.setText("XXXXXX");
+		updateLog("Getting car details....", true);
+		lblGTotal.setText(String.valueOf(Finanance.getTripCoast(r.getDistanceInKm())[0]));
+		updateLog("Loading Base Price....", true);
+		lblRouteName.setText(r.getRouteName());
+		updateLog(" Alloting your taxi....", true);
+		lblTravellerCapacity.setText(String.valueOf(inpCapacity.getText()));
+		lblDistance.setText(String.valueOf(r.getDistanceInKm()));
+		updateLog("Please Wait....", true);
+		updateLog("Estimate bill generated....", true);
+		btnStartOrStop.setEnabled(true);
+	}
+
+	void start(Route r) {
+		holdedTrip = Data.newTrip(r, cUser, Data.nextAvailableCar(passengers), passengers);
+
+		btnStartOrStop.setBackground(new Color(75, 0, 130));
+		btnStartOrStop.setText("End Transit");
+		btnStartOrStop.setEnabled(true);
+
+	}
+
+	void end() {
+		Data.stopTrip(holdedTrip);
+
+		holdedTrip.getCustomer().payBill(Finanance.getTripCoast(holdedTrip.getRoute().getDistanceInKm())[0],
+				holdedTrip);
+		Data.stopTrip(holdedTrip);
+		holdedTrip = null;
+		btnStartOrStop.setBackground(new Color(154, 205, 50));
+		btnStartOrStop.setText("Start");
+		btnStartOrStop.setEnabled(false);
+		reload();
+
+	}
+
+	void addMoney(int val) {
+		cUser.loadCash(val);
+		loadInput.setText("");
+		reload();
+
+	}
+
+	void logoff() {
+		cUser = null;
+		Fram frame = new Fram();
+		frame.setVisible(true);
+		super.setVisible(false);
+		super.dispose();
+
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == btnRequesTrip) {
-			
-				int passengers;
-				if (inpCapacity.getText().equals("")) {
 
-					passengers = 1;
-				} else {
-					passengers =  Integer.valueOf(inpCapacity.getText());
-				}
-				
+			updateLog("Requesting......", true);
+			if (inpCapacity.getText().equals("")) {
+
+				passengers = 1;
+			} else {
+				passengers = Integer.valueOf(inpCapacity.getText());
+			}
+
 			Car nextAvailableCar = Data.nextAvailableCar(passengers);
-			Trip cTrip = new Trip(Data.getRoute(list.getSelectedValue()), cUser,
-					Data.nextAvailableCar(passengers),
-					passengers);
 
-			if (nextAvailableCar != null) 
-			{
-				 if(cUser.getBalanceCash() >= Finanance.getTripCoast(cTrip.getRoute().getDistanceInKm())[0])
-				 {
-					 lblCarNumberPlate.setText(cTrip.getCar().getNumberPlate());
-					 lblGTotal.setText( String.valueOf(Finanance.getTripCoast(cTrip.getRoute().getDistanceInKm())[0]) );
-					 lblRouteName.setText( cTrip.getRoute().getRouteName());
-					 lblTravellerCapacity.setText( String.valueOf( cTrip.getTravellerCount() ));
-					 lblDistance.setText( String.valueOf( cTrip.getRoute().getDistanceInKm()));
+			if (nextAvailableCar != null) {
+				updateLog("Car is available....", true);
+				r = Data.getRoute(list.getSelectedValue());
+				generateBill(r);
+				// System.out.println(r.getRouteName());
+			} else {
+				updateLog("Sorry Currently we have no cars available..", true);
+			}
 
-				 }
-				cTrip.getRoute().getDistanceInKm();
-				cTrip.getRoute().getRouteName();
-				Finanance.getTripCoast(cTrip.getRoute().getDistanceInKm());
-				//lblCarNumberPlate, lblGTotal, lblRouteName,lblTravellerCapacity ,lblDistance 
+		} else if (e.getSource() == btnStartOrStop) {
+
+			if (holdedTrip == null) {
+
+				if (cUser.getBalanceCash() >= Finanance
+						.getTripCoast(Data.getRoute(list.getSelectedValue()).getDistanceInKm())[0]) {
+					generateBill(Data.getRoute(list.getSelectedValue()));
+					start(Data.getRoute(list.getSelectedValue()));
+
+				} else {
+					updateLog("Hi Sorry :( Insufficient funds in your account..", false);
+					holdedTrip = null;
+				}
 
 			} else {
-				System.out.println("Not Available");
+				end();
 			}
 		}
 
-		}
-
 	}
-
+}

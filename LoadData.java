@@ -19,6 +19,7 @@ public class LoadData {
 		Data.newRoute("Chennai Central", "MGR Central Railwaystation, Chennai,Tamilnadu,India 678600", 800);
 		Data.newRoute("Chennai Egmore", "EGMORE Railwaystation, Chennai,Tamilnadu,India 678600", 750);
 		Data.newRoute("Palakkad", "Palakkad Junction, Palakkad,Kerala,India 678600", 1250);
+		Data.newRoute("Delhi", "Palakkad Junction, Palakkad,Kerala,India 678600", 6700);
 
 		// Adding Car --> seatingCapacity, numberPlate, mileage, averageSpeed
 		Data.newCar(4, "TN05X4954", 26, 55);

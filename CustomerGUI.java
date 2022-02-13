@@ -13,10 +13,6 @@ public class CustomerGUI extends JFrame{
 	
 	CustomerGUI(){
 		
-	
-		
-		
-		
 		JPanel login = new JPanel();
 		JTextPane userInput = new JTextPane();
 	
