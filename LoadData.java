@@ -5,6 +5,7 @@ public class LoadData {
 	public LoadData() {
 
 		// Adding new customers
+		Data.newCustomer("a", 34534, "a");
 		Data.newCustomer("Subash", 19000, "test");
 		Data.newCustomer("Karnan", 4499, "test");
 		Data.newCustomer("Kumar", 6599, "test");

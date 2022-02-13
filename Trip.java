@@ -52,7 +52,7 @@ public class Trip {
 		return car;
 	}
 
-	public int GetTravellerCount() {
+	public int getTravellerCount() {
 		return this.countTravellers;
 	}
 
