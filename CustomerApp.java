@@ -53,9 +53,9 @@ public class CustomerApp extends JFrame implements ActionListener {
 	private JTable tblPastTrips;
 	private JTextField inputSearchBar, inpCapacity;
 	private JButton btnRequesTrip, btnStartOrStop;
-	private JList<String> list;
+	private JList<String> list, travelList;
 	private JLabel lblCarNumberPlate, lblGTotal, lblRouteName, lblTravellerCapacity, lblDistance, tripCountLbl, balLbl,
-			balanceInfoLabel;
+			balanceInfoLabel, lblDistanceDash, lblRouteCount, lblTripCount;
 	private JTextField textField;
 	private JTextField loadInput;
 	private JTextField textField_2;
@@ -66,6 +66,7 @@ public class CustomerApp extends JFrame implements ActionListener {
 	private Route r;
 	private Trip holdedTrip;
 	private DefaultTableModel model;
+	private DefaultListModel<String> dlm;
 
 	private int passengers;
 
@@ -130,11 +131,6 @@ public class CustomerApp extends JFrame implements ActionListener {
 		tabbedPane.setBackground(new Color(72, 61, 139));
 		tabbedPane.setBounds(0, -29, 444, 448);
 		centerPanel.add(tabbedPane);
-
-		JPanel pnlDashBoard = new JPanel();
-		pnlDashBoard.setBackground(new Color(255, 255, 255));
-		tabbedPane.addTab("New tab", null, pnlDashBoard, null);
-		pnlDashBoard.setLayout(new BorderLayout(0, 0));
 
 		JPanel pnlNewTrip = new JPanel();
 		pnlNewTrip.setBackground(new Color(72, 61, 139));
@@ -354,6 +350,61 @@ public class CustomerApp extends JFrame implements ActionListener {
 		btnNewButton_1.setBounds(155, 229, 138, 37);
 		pnsSettings.add(btnNewButton_1);
 
+		JPanel pnlDashBoard = new JPanel();
+		pnlDashBoard.setBackground(new Color(72, 61, 139));
+		tabbedPane.addTab("New tab", null, pnlDashBoard, null);
+		pnlDashBoard.setLayout(null);
+
+		lblDistanceDash = new JLabel("*****");
+		lblDistanceDash.setForeground(new Color(255, 255, 255));
+		lblDistanceDash.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDistanceDash.setFont(new Font("Verdana", Font.BOLD | Font.ITALIC, 30));
+		lblDistanceDash.setBounds(133, 81, 188, 67);
+		pnlDashBoard.add(lblDistanceDash);
+
+		JLabel lblDistanceDiscription = new JLabel("Distance Travel with us");
+		lblDistanceDiscription.setForeground(Color.WHITE);
+		lblDistanceDiscription.setFont(new Font("Tahoma", Font.ITALIC, 11));
+		lblDistanceDiscription.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDistanceDiscription.setBounds(133, 67, 188, 22);
+		pnlDashBoard.add(lblDistanceDiscription);
+
+		lblRouteCount = new JLabel("00");
+		lblRouteCount.setHorizontalAlignment(SwingConstants.CENTER);
+		lblRouteCount.setForeground(Color.WHITE);
+		lblRouteCount.setFont(new Font("Verdana", Font.BOLD | Font.ITALIC, 30));
+		lblRouteCount.setBounds(304, 81, 113, 67);
+		pnlDashBoard.add(lblRouteCount);
+
+		lblTripCount = new JLabel("00");
+		lblTripCount.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTripCount.setForeground(Color.WHITE);
+		lblTripCount.setFont(new Font("Verdana", Font.BOLD | Font.ITALIC, 30));
+		lblTripCount.setBounds(31, 81, 113, 67);
+		pnlDashBoard.add(lblTripCount);
+
+		JLabel lblTripCountDashDes = new JLabel("Travell Count");
+		lblTripCountDashDes.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTripCountDashDes.setForeground(Color.WHITE);
+		lblTripCountDashDes.setFont(new Font("Tahoma", Font.ITALIC, 11));
+		lblTripCountDashDes.setBounds(10, 133, 136, 22);
+		pnlDashBoard.add(lblTripCountDashDes);
+
+		JLabel lblRouteDashDiscription = new JLabel("Available Routes");
+		lblRouteDashDiscription.setHorizontalAlignment(SwingConstants.CENTER);
+		lblRouteDashDiscription.setForeground(Color.WHITE);
+		lblRouteDashDiscription.setFont(new Font("Tahoma", Font.ITALIC, 11));
+		lblRouteDashDiscription.setBounds(293, 133, 136, 22);
+		pnlDashBoard.add(lblRouteDashDiscription);
+
+		dlm = new DefaultListModel<String>();
+
+		travelList = new JList<String>(dlm);
+		travelList.setBounds(0, 195, 439, 225);
+		pnlDashBoard.add(travelList);
+
+		tabbedPane.setSelectedIndex(4);
+
 		JPanel leftPanel = new JPanel();
 		leftPanel.setBackground(new Color(75, 0, 130));
 		leftPanel.setForeground(new Color(255, 255, 255));
@@ -366,9 +417,21 @@ public class CustomerApp extends JFrame implements ActionListener {
 		JButton newTripBtn = new JButton("New Trip");
 		newTripBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tabbedPane.setSelectedIndex(1);
+				tabbedPane.setSelectedIndex(0);
 			}
 		});
+
+		JButton btnHome = new JButton("Home");
+		btnHome.setForeground(Color.WHITE);
+		btnHome.setBackground(new Color(75, 0, 130));
+		btnHome.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tabbedPane.setSelectedIndex(4);
+
+				loadPastTripTable();
+			}
+		});
+		leftPanel.add(btnHome);
 		newTripBtn.setBackground(new Color(75, 0, 130));
 		newTripBtn.setForeground(new Color(255, 255, 255));
 		leftPanel.add(newTripBtn);
@@ -378,7 +441,7 @@ public class CustomerApp extends JFrame implements ActionListener {
 		loadCashBtn.setForeground(Color.WHITE);
 		loadCashBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tabbedPane.setSelectedIndex(2);
+				tabbedPane.setSelectedIndex(1);
 			}
 		});
 		leftPanel.add(loadCashBtn);
@@ -392,18 +455,6 @@ public class CustomerApp extends JFrame implements ActionListener {
 			}
 		});
 		leftPanel.add(btnPreviousTrips);
-
-		JButton btnAccSettings = new JButton("Account Settings");
-		btnAccSettings.setForeground(Color.WHITE);
-		btnAccSettings.setBackground(new Color(75, 0, 130));
-		btnAccSettings.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				tabbedPane.setSelectedIndex(4);
-
-				loadPastTripTable();
-			}
-		});
-		leftPanel.add(btnAccSettings);
 
 		JButton btnLogOut = new JButton("LogOut");
 		btnLogOut.setForeground(Color.WHITE);
@@ -458,8 +509,8 @@ public class CustomerApp extends JFrame implements ActionListener {
 			for (Trip t : cUser.pastTrips) {
 				// System.out.println( t.getRoute().getRouteName());
 				dataArr[counter][0] = t.getRoute().getRouteName();
-				dataArr[counter][1] = t.getStartTime().toString();
-				dataArr[counter][2] = t.getEndTime().toString();
+				// dataArr[counter][1] = t.getStartTime().toString();
+				// dataArr[counter][2] = t.getEndTime().toString();
 				dataArr[counter][3] = String.valueOf(t.getRoute().getDistanceInKm());
 				dataArr[counter][4] = String.valueOf(Finanance.getTripCoast(t.getRoute().getDistanceInKm())[0]);
 
@@ -472,10 +523,26 @@ public class CustomerApp extends JFrame implements ActionListener {
 
 	}
 
-	void reload() {
+	void pastListload() {
+		// for Dash Board
 
+		for (Trip t : cUser.pastTrips) {
+
+			dlm.addElement(t.getRoute().getRouteName().toString() + " -  "
+					+ String.valueOf(t.getRoute().getDistanceInKm()) + ".Km -  Rs."
+					+ String.valueOf(Finanance.getTripCoast(t.getRoute().getDistanceInKm())[0]) + " ----");
+		}
+
+	}
+
+	void reload() {
 		tripCountLbl.setText("No. Trips " + cUser.getTripCount());
 		balanceInfoLabel.setText("Cash :" + cUser.getBalanceCash());
+		lblDistanceDash.setText("" + cUser.getKmTravelled());
+		lblRouteCount.setText("" + Data.getRouteCount());
+		lblTripCount.setText("" + cUser.getTripCount());
+		pastListload();
+
 	}
 
 	void generateBill(Route r) {

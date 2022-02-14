@@ -173,6 +173,10 @@ public abstract class Data {
 		System.out.println("No. Routes Available:  \t" + Route.getRouteCount());
 		return false;
 	}
+	
+	static int getRouteCount(){
+		return Route.getRouteCount();
+	}
 // #################################################### END OF ROUT
 
 // #################################################### START OF CAR
@@ -234,7 +238,7 @@ public abstract class Data {
 		if (route == null || customer == null || car == null)
 			return null;
 		tripsInfo.add(new Trip(route, customer, nextAvailableCar(countTravellers), countTravellers));
-		customer.pastTrips.add(tripsInfo.get( tripsInfo.size()-1));
+		//customer.pastTrips.add(tripsInfo.get( tripsInfo.size()-1));
 		return tripsInfo.get(tripsInfo.size() - 1);
 	}
 

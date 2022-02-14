@@ -53,6 +53,18 @@ public class Customer {
 
 		return null;
 	}
+	
+	public int getKmTravelled(){
+		
+		int distanceKm = 0;
+		
+		for(Trip t:pastTrips) {
+			distanceKm += t.getRoute().getDistanceInKm();
+		}
+	return distanceKm;	
+	}
+	
+	
 
 	// -------------------------SETTERS
 	public void loadCash(int cash) {
