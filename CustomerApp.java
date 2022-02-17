@@ -1,61 +1,44 @@
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import java.awt.Dialog.ModalExclusionType;
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
 import java.awt.GridLayout;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.Color;
-import java.awt.GridBagLayout;
 import javax.swing.JButton;
-import javax.swing.JLayeredPane;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 
-import java.awt.CardLayout;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import javax.swing.JList;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Rectangle;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.Cursor;
 import java.awt.Component;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.Canvas;
 
 public class CustomerApp extends JFrame implements ActionListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private Customer cUser;
-	private JPanel contentPane, pnlCarDetails;
+	private JPanel contentPane;
 	private JTable tblPastTrips;
 	private JTextField inputSearchBar, inpCapacity;
 	private JButton btnRequesTrip, btnStartOrStop;
 	private JList<String> list, travelList;
 	private JLabel lblCarNumberPlate, lblGTotal, lblRouteName, lblTravellerCapacity, lblDistance, tripCountLbl, balLbl,
 			balanceInfoLabel, lblDistanceDash, lblRouteCount, lblTripCount;
-	private JTextField textField;
 	private JTextField loadInput;
 	private JTextField textField_2;
 	private JLabel lblMSG;
@@ -595,7 +578,7 @@ public class CustomerApp extends JFrame implements ActionListener {
 
 	void logoff() {
 		cUser = null;
-		Fram frame = new Fram();
+		CustomerGUILogin frame = new CustomerGUILogin();
 		frame.setVisible(true);
 		super.setVisible(false);
 		super.dispose();

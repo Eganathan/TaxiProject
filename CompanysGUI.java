@@ -76,6 +76,12 @@ public class CompanysGUI extends JFrame implements ActionListener {
 		contentPane.add(pnlTab, BorderLayout.CENTER);
 
 		JPanel pnlDash = new JPanel();
+		pnlDash.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e){
+				reloadDashCompanyGUI();
+			}
+		});
 		pnlDash.setBackground(new Color(75, 0, 130));
 		pnlTab.addTab("Home", null, pnlDash, null);
 		pnlDash.setLayout(null);
@@ -326,6 +332,14 @@ public class CompanysGUI extends JFrame implements ActionListener {
 		panel_1.add(btnViewRoutesInfo);
 
 		JButton btnModifyRoute = new JButton("Modify Route");
+		btnModifyRoute.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				Data.getRoute( list .getSelectedValue() );
+				JOptionPane.showInputDialog(btnModifyRoute, e, getTitle(), ABORT);
+			}
+		});
 		btnModifyRoute.setFont(new Font("Tahoma", Font.ITALIC, 15));
 		panel_1.add(btnModifyRoute);
 
@@ -365,11 +379,9 @@ public class CompanysGUI extends JFrame implements ActionListener {
 		btnModifyCar.setFont(new Font("Tahoma", Font.ITALIC, 15));
 		panel_1_1.add(btnModifyCar);
 
-		JPanel panel_6 = new JPanel();
-		pnlTab.addTab("New tab", null, panel_6, null);
-
-		JPanel panel_7 = new JPanel();
-		pnlTab.addTab("New tab", null, panel_7, null);
+		JPanel pnlMoneyPanel = new JPanel();
+		pnlMoneyPanel.setBackground(new Color(72, 61, 139));
+		pnlTab.addTab("Finance Tab", null, pnlMoneyPanel, null);
 
 		pnlLog = new JPanel();
 		pnlLog.setBackground(new Color(152, 251, 152));
@@ -382,7 +394,7 @@ public class CompanysGUI extends JFrame implements ActionListener {
 		lblLog.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		pnlLog.add(lblLog, BorderLayout.CENTER);
 
-		reloadDash();
+		reloadDashCompanyGUI();
 	}
 
 	public void loadTripsListDash() {
@@ -392,7 +404,7 @@ public class CompanysGUI extends JFrame implements ActionListener {
 
 	}
 
-	void reloadDash() {
+	void reloadDashCompanyGUI() {
 		reloadRouteListView();
 		reloadCarListView();
 		loadTripsListDash();
@@ -404,6 +416,7 @@ public class CompanysGUI extends JFrame implements ActionListener {
 		lblCarCount.setText(String.valueOf(String.valueOf(Car.carCount())));
 		this.repaint();
 	}
+	
 
 	void reloadRouteListView() {
 		rRouteListDetailsDML.removeAllElements();

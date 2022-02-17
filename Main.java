@@ -8,7 +8,7 @@ public class Main {
 		new LoadData();
 		Data.updateFin();
 		
-		new Fram().setVisible(true);;
+		new CustomerGUILogin().setVisible(true);;
 		cGUI = new CompanysGUI();
 		cGUI.setVisible(true);
 

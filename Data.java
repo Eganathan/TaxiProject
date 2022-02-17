@@ -1,6 +1,5 @@
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public abstract class Data {
 
@@ -19,14 +18,18 @@ public abstract class Data {
 	 * 
 	 * @param cash -> amount to deposit
 	 */
+	
+
 	static boolean newCustomer(String name, int cash, String pass) {
 
-		if (name == null || name.equals("") && name.length() >= 3 || pass == null && !customerExists(name))
+		if (name == null || name.equals("") && name.length() >= 2 || pass == null && customerExists(name))
 			return false;
 
 		if (cash < 0)
 			return false;
-
+		if(customerExists(name))
+			return false;
+		
 		customerInfo.add(new Customer(name, cash, pass));
 		return true;
 	}
