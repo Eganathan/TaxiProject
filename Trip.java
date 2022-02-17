@@ -8,17 +8,18 @@ public class Trip {
 	private Customer customer;
 	private Date startTime;
 	private Date endTime;
-	private static int tripCount;
+	static int tripCount;
 	private boolean inTransit;
 	private Car car;
 	private int countTravellers;
-	private final int ID = tripCount++;
+	private final int ID = tripCount;
 
 	Trip(Route route, Customer customer, Car car, int countTravellers) {
 		this.route = route;
 		this.customer = customer;
 		this.countTravellers = countTravellers;
 		this.car = car;
+		tripCount++;
 	}
 
 //-----------------------------------------------> GETTERS

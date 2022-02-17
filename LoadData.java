@@ -28,9 +28,11 @@ public class LoadData {
 		Data.newCar(7, "TN08X4657", 35, 65);
 		Data.newCar(9, "TN05X4758", 33, 80);
 		Data.newCar(2, "TN05X4259", 39, 67);
-
-		// System.out.println( Data.getCustomer("subash", "test").getLastTripObject() );
-
+		
+		 //newTrip(Route route, Customer customer, Car car, int countTravellers)
+		Data.newTrip(Data.getRoute("Tiruvannamalai") ,Data.getCustomer("subash", "test"), Data.nextAvailableCar(5),5).endTransit();
+		Data.newTrip(Data.getRoute("Chennai Central") ,Data.getCustomer("subash", "test"), Data.nextAvailableCar(5),5).endTransit();
+		Data.newTrip(Data.getRoute("Pondicherry") ,Data.getCustomer("subash", "test"), Data.nextAvailableCar(5),5).endTransit();
 	}
 
 }

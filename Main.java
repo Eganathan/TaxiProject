@@ -1,15 +1,17 @@
 package playground;
 
 public class Main {
-
+	static CompanysGUI cGUI;
 	public static void main(String[] args) {
 
 		
 		new LoadData();
-		//new CustomerGUI();
-		//new App();
-		Fram frame = new Fram();
-		frame.setVisible(true);
+		Data.updateFin();
+		
+		new Fram().setVisible(true);;
+		cGUI = new CompanysGUI();
+		cGUI.setVisible(true);
+
 	}
 
 }

@@ -230,6 +230,31 @@ public abstract class Data {
 		System.out.println("No. Cars Available:  \t" + Car.carCount());
 		return false;
 	}
+	
+	static ArrayList<String> getCarNumberAsList()
+	{
+		ArrayList<String> carList = new ArrayList<>();
+				
+		for(Car c:carsInfo)
+		{
+			carList.add(c.getNumberPlate());
+		}
+		return carList;
+	}
+	
+	//int seatingCapacity, String numberPlate, int mileage, int averageSpeed
+	static Car getCarNumber(String car)
+	{
+		for(Car c: carsInfo)
+		{
+			if(c.getNumberPlate().equals(car))
+			{
+				return c;
+			}
+		}
+		return null;
+		
+	}
 // #################################################### END OF CAR
 
 // #################################################### START OF TRIP
@@ -254,6 +279,24 @@ public abstract class Data {
 		}
 		return true;
 	}
+	
+	static ArrayList<String> getTripsInfoAsList()
+	{
+		ArrayList<String> tripInfoAsList =new ArrayList<>();
+		for(Trip t: tripsInfo)
+		{
+			StringBuilder sb = new StringBuilder();
+			
+			sb.append(t.getID() +" \t");
+			sb.append(t.getRoute().getRouteName() +" \t");
+			sb.append(t.getTravellerCount() +" \t");
+			sb.append(t.getRoute().getDistanceInKm() +" \t");
+			
+			tripInfoAsList.add( sb.toString());
+		}
+		
+		return tripInfoAsList;
+	}
 
 	// print Trip Data
 	static boolean tripData() {
@@ -275,6 +318,19 @@ public abstract class Data {
 		}
 		System.out.println("No. Cars Available:  \t" + Car.carCount());
 		return false;
+	}
+	
+	//#==============================================================================Finances values
+
+	static void updateFin() {
+		for (Trip t : tripsInfo) {
+			float[] x = Finanance.getTripCoast(t.getRoute().getDistanceInKm());
+
+			Finanance.setBANKBALANCE(Finanance.getBANKBALANCE() + x[0]);
+			Finanance.setCESS(Finanance.getCESS() + x[1]);
+			Finanance.setTAX(Finanance.getTAX() + x[2]);
+		}
+
 	}
 
 }

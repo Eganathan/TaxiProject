@@ -76,6 +76,7 @@ public class Customer {
 		this.tripCount++;
 		this.pastTrips.add(t);
 		Finanance.addToBank(amount);
+		Main.cGUI.reloadDash();
 
 	}
 

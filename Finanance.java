@@ -2,7 +2,7 @@ package playground;
 
 import java.util.Date;
 
-public abstract class Finanance {
+public abstract class Finanance{
 
 	private static final float coastPerKm = 11.0f;
 	private static final float tax = 2.3f;
@@ -69,4 +69,18 @@ public abstract class Finanance {
 		return CESS;
 	}
 
+	public static void setBANKBALANCE(float bANKBALANCE) {
+		BANKBALANCE = bANKBALANCE;
+	}
+
+	public static void setTAX(float tAX) {
+		TAX = tAX;
+	}
+
+	public static void setCESS(float cESS) {
+		CESS = cESS;
+	}
+
+	
+	
 }

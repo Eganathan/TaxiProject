@@ -275,6 +275,7 @@ public class CustomerApp extends JFrame implements ActionListener {
 		btnStartOrStop = new JButton("Start ");
 		panel_1.add(btnStartOrStop, BorderLayout.SOUTH);
 		btnStartOrStop.setEnabled(false);
+		btnStartOrStop.setBackground(new Color(154, 205, 99));
 		btnStartOrStop.addActionListener(this);
 
 		JPanel pnlLoadCash = new JPanel();
@@ -418,6 +419,8 @@ public class CustomerApp extends JFrame implements ActionListener {
 		newTripBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(0);
+				lm.removeAllElements();
+				lm.addAll(Data.getRouteNameList());
 			}
 		});
 
@@ -564,21 +567,21 @@ public class CustomerApp extends JFrame implements ActionListener {
 	void start(Route r) {
 		holdedTrip = Data.newTrip(r, cUser, Data.nextAvailableCar(passengers), passengers);
 
-		btnStartOrStop.setBackground(new Color(75, 0, 130));
+		btnStartOrStop.setBackground(new Color(255, 160, 122));
 		btnStartOrStop.setText("End Transit");
 		btnStartOrStop.setEnabled(true);
 
 	}
 
-	void end() {
+	void end(){
 		Data.stopTrip(holdedTrip);
 
 		holdedTrip.getCustomer().payBill(Finanance.getTripCoast(holdedTrip.getRoute().getDistanceInKm())[0],
 				holdedTrip);
 		Data.stopTrip(holdedTrip);
 		holdedTrip = null;
-		btnStartOrStop.setBackground(new Color(154, 205, 50));
 		btnStartOrStop.setText("Start");
+		btnStartOrStop.setBackground(new Color(154, 205, 99));
 		btnStartOrStop.setEnabled(false);
 		reload();
 
