@@ -1,4 +1,3 @@
-package playground;
 
 public class Car {
 

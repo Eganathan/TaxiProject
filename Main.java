@@ -1,4 +1,4 @@
-package playground;
+
 
 public class Main {
 	static CompanysGUI cGUI;

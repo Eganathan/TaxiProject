@@ -1,5 +1,3 @@
-package playground;
-
 public class Route {
 
 	private String routeName;

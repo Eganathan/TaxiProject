@@ -1,4 +1,3 @@
-package playground;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -44,8 +43,6 @@ public class CompanysGUI extends JFrame implements ActionListener {
 	private DefaultListModel<String> tripsDashList, rRouteListDetailsDML, listCarDetailsListDLM;
 	private JList<String> rRouteListDetails, listCarDetailsList;
 	private JButton btnAddRoute, btnNewCar;
-
-	// new Car Labels
 
 	public CompanysGUI() {
 		setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

@@ -1,8 +1,4 @@
-package playground;
-
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -19,7 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JPasswordField;
 
 public class Fram extends JFrame implements ActionListener{
-
+	private static final long serialVersionUID = 7488079262518628223L;
 	private JPanel contentPane ,loginPane ,mainPanel;
 	private JTextField userNameInput;
 	private JPasswordField passwordInput;
@@ -93,6 +89,7 @@ public class Fram extends JFrame implements ActionListener{
 			
 		}else if(e.getSource() == loginBtn)
 		{
+			@SuppressWarnings("deprecation")
 			Customer curCustomer = Data.getCustomer(userNameInput.getText(), passwordInput.getText());
 			if(curCustomer != null)
 			{

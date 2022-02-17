@@ -1,5 +1,3 @@
-package playground;
-
 public class LoadData {
 
 	public LoadData() {
