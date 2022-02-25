@@ -21,6 +21,14 @@ public class Trip {
 		this.car = car;
 		tripCount++;
 	}
+	
+	Trip(int Id, Route route, Customer customer, Car car, int countTravellers) {
+		this.route = route;
+		this.customer = customer;
+		this.countTravellers = countTravellers;
+		this.car = car;
+		tripCount++;
+	}
 
 //-----------------------------------------------> GETTERS
 

@@ -496,4 +496,5 @@ public class CompanysGUI extends JFrame implements ActionListener {
 
 		}
 	}
+
 }

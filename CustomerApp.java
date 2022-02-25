@@ -26,7 +26,6 @@ import javax.swing.JList;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.Component;
-import java.awt.Canvas;
 
 public class CustomerApp extends JFrame implements ActionListener {
 
@@ -469,6 +468,8 @@ public class CustomerApp extends JFrame implements ActionListener {
 		lblMSG.setForeground(new Color(75, 0, 130));
 		lblMSG.setBackground(new Color(60, 179, 113));
 		contentPane.add(lblMSG, BorderLayout.SOUTH);
+		
+		reload() ;
 	}
 
 	void updateLog(String s, boolean r) {
@@ -566,6 +567,7 @@ public class CustomerApp extends JFrame implements ActionListener {
 		btnStartOrStop.setBackground(new Color(154, 205, 99));
 		btnStartOrStop.setEnabled(false);
 		reload();
+		holdedTrip = null;
 
 	}
 

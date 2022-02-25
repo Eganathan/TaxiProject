@@ -6,6 +6,7 @@ public class Customer {
 	private final String customerName;
 	private int tripCount;
 	private static int customerCount;
+
 	private float loadedCash;
 	private String password;
 	 ArrayList<Trip> pastTrips = new ArrayList<Trip>();
@@ -75,12 +76,17 @@ public class Customer {
 		this.pastTrips.add(t);
 		Finanance.addToBank(amount);
 		Main.cGUI.reloadDashCompanyGUI();
+		
 
 	}
 
 	Trip newTrip(Trip t) {
 		currentTrips.add(t);
 		return t;
+	}
+	
+	public static void setCustomerCount(int customerCount) {
+		Customer.customerCount = customerCount;
 	}
 
 }

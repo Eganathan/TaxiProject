@@ -8,6 +8,10 @@ public abstract class Data {
 	private static ArrayList<Car> carsInfo = new ArrayList<Car>();
 	private static ArrayList<Trip> tripsInfo = new ArrayList<Trip>();
 
+	static void initialLoadingDB() {
+		DataBaseFunctions.loadAllData();
+	}
+
 	// ##################################################### START OF CUSTOMERS
 
 	/*
@@ -18,7 +22,6 @@ public abstract class Data {
 	 * 
 	 * @param cash -> amount to deposit
 	 */
-	
 
 	static boolean newCustomer(String name, int cash, String pass) {
 
@@ -27,9 +30,9 @@ public abstract class Data {
 
 		if (cash < 0)
 			return false;
-		if(customerExists(name))
+		if (customerExists(name))
 			return false;
-		
+
 		customerInfo.add(new Customer(name, cash, pass));
 		return true;
 	}
@@ -58,6 +61,20 @@ public abstract class Data {
 		if (val != null) {
 			if (!val.getPassword().equals(pass))
 				val = null;
+		}
+
+		return val;
+	}
+
+	// returns the object of customer
+	static Customer getCustomer(String name) {
+		Customer val = null;
+		for (Customer c : customerInfo) {
+			if (c.getCustomerName().equalsIgnoreCase(name)) {
+				val = c;
+				break;
+			}
+
 		}
 
 		return val;
@@ -175,8 +192,8 @@ public abstract class Data {
 		System.out.println("No. Routes Available:  \t" + Route.getRouteCount());
 		return false;
 	}
-	
-	static int getRouteCount(){
+
+	static int getRouteCount() {
 		return Route.getRouteCount();
 	}
 // #################################################### END OF ROUT
@@ -216,6 +233,19 @@ public abstract class Data {
 		return null;
 	}
 
+	static Car getCar(String carD) {
+
+		for (Car c : carsInfo) {
+			if (c.getNumberPlate().equalsIgnoreCase(carD)) {
+				return c;
+
+			}
+
+		}
+
+		return null;
+	}
+
 	// print Car Data
 	static boolean carData() {
 		System.out.println("-----------------------------------------");
@@ -232,30 +262,25 @@ public abstract class Data {
 		System.out.println("No. Cars Available:  \t" + Car.carCount());
 		return false;
 	}
-	
-	static ArrayList<String> getCarNumberAsList()
-	{
+
+	static ArrayList<String> getCarNumberAsList() {
 		ArrayList<String> carList = new ArrayList<>();
-				
-		for(Car c:carsInfo)
-		{
+
+		for (Car c : carsInfo) {
 			carList.add(c.getNumberPlate());
 		}
 		return carList;
 	}
-	
-	//int seatingCapacity, String numberPlate, int mileage, int averageSpeed
-	static Car getCarNumber(String car)
-	{
-		for(Car c: carsInfo)
-		{
-			if(c.getNumberPlate().equals(car))
-			{
+
+	// int seatingCapacity, String numberPlate, int mileage, int averageSpeed
+	static Car getCarNumber(String car) {
+		for (Car c : carsInfo) {
+			if (c.getNumberPlate().equals(car)) {
 				return c;
 			}
 		}
 		return null;
-		
+
 	}
 // #################################################### END OF CAR
 
@@ -265,7 +290,12 @@ public abstract class Data {
 		if (route == null || customer == null || car == null)
 			return null;
 		tripsInfo.add(new Trip(route, customer, nextAvailableCar(countTravellers), countTravellers));
-		//customer.pastTrips.add(tripsInfo.get( tripsInfo.size()-1));
+		return tripsInfo.get(tripsInfo.size() - 1);
+	}
+
+	// for adding trips DB
+	static Trip newTrip(int id, String Route, String customer, String car, int countTravellers) {
+		tripsInfo.add(new Trip(id, getRoute(Route), getCustomer(customer), getCar(car), countTravellers));
 		return tripsInfo.get(tripsInfo.size() - 1);
 	}
 
@@ -279,24 +309,25 @@ public abstract class Data {
 			t.endTransit();
 			t.getCar().changeAvailablity();
 		}
+
+		DataBaseFunctions.insertTrip(t.getCustomer().getCustomerName(), t.getRoute().getRouteName(),
+				t.getCar().getNumberPlate(), t.getTravellerCount());
 		return true;
 	}
-	
-	static ArrayList<String> getTripsInfoAsList()
-	{
-		ArrayList<String> tripInfoAsList =new ArrayList<>();
-		for(Trip t: tripsInfo)
-		{
+
+	static ArrayList<String> getTripsInfoAsList() {
+		ArrayList<String> tripInfoAsList = new ArrayList<>();
+		for (Trip t : tripsInfo) {
 			StringBuilder sb = new StringBuilder();
-			
-			sb.append(t.getID() +" \t");
-			sb.append(t.getRoute().getRouteName() +" \t");
-			sb.append(t.getTravellerCount() +" \t");
-			sb.append(t.getRoute().getDistanceInKm() +" \t");
-			
-			tripInfoAsList.add( sb.toString());
+
+			sb.append(t.getID() + " \t");
+			sb.append(t.getRoute().getRouteName() + " \t");
+			sb.append(t.getTravellerCount() + " \t");
+			sb.append(t.getRoute().getDistanceInKm() + " \t");
+
+			tripInfoAsList.add(sb.toString());
 		}
-		
+
 		return tripInfoAsList;
 	}
 
@@ -321,8 +352,9 @@ public abstract class Data {
 		System.out.println("No. Cars Available:  \t" + Car.carCount());
 		return false;
 	}
-	
-	//#==============================================================================Finances values
+
+	// #==============================================================================Finances
+	// values
 
 	static void updateFin() {
 		for (Trip t : tripsInfo) {
