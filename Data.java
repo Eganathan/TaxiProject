@@ -22,22 +22,28 @@ public abstract class Data {
 	 * 
 	 * @param cash -> amount to deposit
 	 */
-
 	static boolean newCustomer(String name, int cash, String pass) {
 
 		if (name == null || name.equals("") && name.length() >= 2 || pass == null && customerExists(name))
 			return false;
 
+		if (DataBaseFunctions.isUserExists(name))
+			return false;
+
 		if (cash < 0)
-			return false;
-		if (customerExists(name))
-			return false;
+			cash = 0;
 
 		customerInfo.add(new Customer(name, cash, pass));
 		return true;
 	}
 
-	// checks if the customer exists or not
+	//==== New Object for DB
+	static boolean newCustomerDB(String name, int cash, String pass) {
+		customerInfo.add(new Customer(name, cash, pass));
+		return true;
+	}
+
+	//===== checks if the customer exists or not
 	static boolean customerExists(String name) {
 		for (Customer val : customerInfo) {
 			if (name.equalsIgnoreCase(val.getCustomerName()))
@@ -47,7 +53,7 @@ public abstract class Data {
 		return false;
 	}
 
-	// returns the object of customer
+	//===== returns the object of customer
 	static Customer getCustomer(String name, String pass) {
 		Customer val = null;
 		for (Customer c : customerInfo) {
