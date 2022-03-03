@@ -9,7 +9,7 @@ import java.util.List;
 // Notice, do not import com.mysql.cj.jdbc.*
 // or you will have problems!
 
-public class DB{
+public class DB {
 
 	private String url = "jdbc:mysql://localhost:3306/taxiland";
 	private Connection conn = null;
@@ -32,7 +32,7 @@ public class DB{
 	}
 
 	// start function
-	void startConn(){
+	void startConn() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			conn = DriverManager.getConnection(url, "root", "1234");
@@ -44,13 +44,12 @@ public class DB{
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		
-		
+
 	}
-	
+
 	// start function
 	void endConn() throws SQLException {
-		if(!conn.isClosed())
+		if (!conn.isClosed())
 			conn.close();
 	}
 
@@ -266,8 +265,8 @@ public class DB{
 	void insertTrip(String tCustomer, String tRoute, String tCar, int tTravellers) {
 		dealConn();
 
-		String sql = "INSERT INTO taxiland.trips (tCustomer, tRoute,tCar, tTravellers)values " + " ( '" + tCustomer
-				+ "' , '" + tRoute + "' , '" + tCar + "' ," + String.valueOf(tTravellers) + " )";
+		String sql = "INSERT INTO taxiland.trips (tCustomer, tRoute, tCar, tTravellers) VALUES " + " ( '" + tCustomer
+				+ "' , '" + tRoute + "' , '" + tCar + "' ," + tTravellers + " )";
 
 		Statement statement;
 		try {
@@ -298,10 +297,9 @@ public class DB{
 			statement = conn.prepareStatement(sql);
 			ResultSet outputSet = statement.executeQuery(sql);
 			while (outputSet.next()) {
-				 if(outputSet.getInt("count") > 0)
-					 isThere = true;
-				 
-				
+				if (outputSet.getInt("count") > 0)
+					isThere = true;
+
 			}
 
 		} catch (SQLException e) {

@@ -23,6 +23,8 @@ import javax.swing.ListSelectionModel;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
+
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.Component;
@@ -32,14 +34,12 @@ public class CustomerApp extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private Customer cUser;
 	private JPanel contentPane;
-	private JTable tblPastTrips;
 	private JTextField inputSearchBar, inpCapacity;
 	private JButton btnRequesTrip, btnStartOrStop;
 	private JList<String> list, travelList;
 	private JLabel lblCarNumberPlate, lblGTotal, lblRouteName, lblTravellerCapacity, lblDistance, tripCountLbl, balLbl,
 			balanceInfoLabel, lblDistanceDash, lblRouteCount, lblTripCount;
 	private JTextField loadInput;
-	private JTextField textField_2;
 	private JLabel lblMSG;
 	private String[] titlesArr;
 	private String[][] dataArr;
@@ -48,6 +48,7 @@ public class CustomerApp extends JFrame implements ActionListener {
 	private Trip holdedTrip;
 	private DefaultTableModel model;
 	private DefaultListModel<String> dlm;
+	private JList listPrev;
 
 	private int passengers;
 
@@ -279,6 +280,8 @@ public class CustomerApp extends JFrame implements ActionListener {
 					updateLog("Amount lodded sucessfully...", true);
 				} else {
 					updateLog("Something Wrong..Please Try again..", false);
+					negtaiveValueDLG();
+					loadInput.setText("");
 				}
 			}
 		});
@@ -298,39 +301,20 @@ public class CustomerApp extends JFrame implements ActionListener {
 
 		model = new DefaultTableModel(dataArr, titlesArr);
 		pnlPrevTrips.setLayout(new BorderLayout(0, 0));
-		tblPastTrips = new JTable(model);
-		tblPastTrips.setSize(new Dimension(5, 5));
-		tblPastTrips.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tblPastTrips.setIntercellSpacing(new Dimension(1, 5));
-		tblPastTrips.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
-		tblPastTrips.setAutoCreateRowSorter(true);
-		tblPastTrips.setRowSelectionAllowed(false);
-		tblPastTrips.setBorder(new EmptyBorder(5, 5, 5, 5));
-		tblPastTrips.setFillsViewportHeight(true);
-		tblPastTrips.setBackground(new Color(255, 255, 255));
-		tblPastTrips.setFont(new Font("Sitka Display", Font.ITALIC, 16));
-		pnlPrevTrips.add(tblPastTrips);
+		
+		listPrev = new JList();
+		pnlPrevTrips.add(listPrev, BorderLayout.CENTER);
 
 		JPanel pnsSettings = new JPanel();
 		pnsSettings.setBackground(new Color(72, 61, 139));
 		tabbedPane.addTab("New tab", null, pnsSettings, null);
 		pnsSettings.setLayout(null);
-
-		JLabel lblNewLabel_5 = new JLabel("Change Password");
-		lblNewLabel_5.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_5.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 17));
-		lblNewLabel_5.setForeground(new Color(255, 255, 255));
-		lblNewLabel_5.setBounds(120, 140, 202, 30);
-		pnsSettings.add(lblNewLabel_5);
-
-		textField_2 = new JTextField();
-		textField_2.setBounds(120, 181, 202, 37);
-		pnsSettings.add(textField_2);
-		textField_2.setColumns(10);
-
-		JButton btnNewButton_1 = new JButton("Update");
-		btnNewButton_1.setBounds(155, 229, 138, 37);
-		pnsSettings.add(btnNewButton_1);
+		
+		JList listTrips = new JList();
+		listTrips.setVisibleRowCount(10);
+		listTrips.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listTrips.setBounds(0, 0, 1, 1);
+		pnsSettings.add(listTrips);
 
 		JPanel pnlDashBoard = new JPanel();
 		pnlDashBoard.setBackground(new Color(72, 61, 139));
@@ -549,7 +533,8 @@ public class CustomerApp extends JFrame implements ActionListener {
 
 	void start(Route r) {
 		holdedTrip = Data.newTrip(r, cUser, Data.nextAvailableCar(passengers), passengers);
-
+		btnRequesTrip.setEnabled(false);
+		btnRequesTrip.setText(" In Transit...");
 		btnStartOrStop.setBackground(new Color(255, 160, 122));
 		btnStartOrStop.setText("End Transit");
 		btnStartOrStop.setEnabled(true);
@@ -564,11 +549,12 @@ public class CustomerApp extends JFrame implements ActionListener {
 		Data.stopTrip(holdedTrip);
 		holdedTrip = null;
 		btnStartOrStop.setText("Start");
+		btnRequesTrip.setText("Request Trip");
 		btnStartOrStop.setBackground(new Color(154, 205, 99));
 		btnStartOrStop.setEnabled(false);
 		reload();
 		holdedTrip = null;
-
+		btnRequesTrip.setEnabled(true);
 	}
 
 	void addMoney(int val) {
@@ -586,31 +572,42 @@ public class CustomerApp extends JFrame implements ActionListener {
 		super.dispose();
 
 	}
+	
+	private void negtaiveValueDLG() {
+		JOptionPane.showMessageDialog(this, "Unable to process your transaction due to negative value. \n Please re-try with a valid input.\n  Thank You!", "Negative Value Found ", JOptionPane.ERROR_MESSAGE);
+		
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == btnRequesTrip) {
 
-			updateLog("Requesting......", true);
-			if (inpCapacity.getText().equals("")) {
+			if(list.getSelectedValue() != null)
+			{
+				updateLog("Requesting......", true);
+				if (inpCapacity.getText().equals("")) {
 
-				passengers = 1;
-			} else {
-				passengers = Integer.valueOf(inpCapacity.getText());
+					passengers = 1;
+				} else {
+					passengers = Integer.valueOf(inpCapacity.getText());
+				}
+
+				Car nextAvailableCar = Data.nextAvailableCar(passengers);
+
+				if (nextAvailableCar != null) {
+					updateLog("Car is available....", true);
+					r = Data.getRoute(list.getSelectedValue());
+					generateBill(r);
+					// System.out.println(r.getRouteName());
+				} else {
+					updateLog("Sorry Currently we have no cars available..", true);
+				}
+			}else {
+				JOptionPane.showMessageDialog(this, "Please select atleast one route and request again... \n Thank You!", "No Selection Found", JOptionPane.ERROR_MESSAGE);
 			}
-
-			Car nextAvailableCar = Data.nextAvailableCar(passengers);
-
-			if (nextAvailableCar != null) {
-				updateLog("Car is available....", true);
-				r = Data.getRoute(list.getSelectedValue());
-				generateBill(r);
-				// System.out.println(r.getRouteName());
-			} else {
-				updateLog("Sorry Currently we have no cars available..", true);
-			}
-
+			
+			//end of request button
 		} else if (e.getSource() == btnStartOrStop) {
 
 			if (holdedTrip == null) {
@@ -622,6 +619,7 @@ public class CustomerApp extends JFrame implements ActionListener {
 
 				} else {
 					updateLog("Hi Sorry :( Insufficient funds in your account..", false);
+					JOptionPane.showMessageDialog(this, "Kindly load the sufficient money before starting the journey... \n Thank You! \n Thank You!", "Insufficient Funds ", JOptionPane.ERROR_MESSAGE);
 					holdedTrip = null;
 				}
 

@@ -1,6 +1,8 @@
 
 
 public class Main {
+	static CustomerGUILogin cGUI;
+	
 	public static void main(String[] args) {
 
 		//DataBaseFunctions.insertTrip("haha", "k","t",5);
@@ -8,9 +10,13 @@ public class Main {
 		//new LoadData();
 		Data.updateFin();
 		
-		new CustomerGUILogin().setVisible(true);;
-		//new CompanysGUI().setVisible(true);
-		new Main().finalize();
+		
+		
+		
+		
+		cGUI = new CustomerGUILogin();
+		cGUI.setVisible(true);
+		
 	}
 	
 	protected void finalize()

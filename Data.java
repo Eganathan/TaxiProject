@@ -24,7 +24,7 @@ public abstract class Data {
 	 */
 	static boolean newCustomer(String name, int cash, String pass) {
 
-		if (name == null || name.equals("") && name.length() >= 2 || pass == null && customerExists(name))
+		if (name == null || name.equals("") && name.length() >= 2 || pass == null || customerExists(name))
 			return false;
 
 		if (DataBaseFunctions.isUserExists(name))
@@ -323,13 +323,17 @@ public abstract class Data {
 
 	static ArrayList<String> getTripsInfoAsList() {
 		ArrayList<String> tripInfoAsList = new ArrayList<>();
+		tripInfoAsList.add(" Trip ID      |" + " Route Name                                     |"
+				+ " Traveller Count  |" + " Total Distance");
+		tripInfoAsList.add("  ");
+
 		for (Trip t : tripsInfo) {
 			StringBuilder sb = new StringBuilder();
 
-			sb.append(t.getID() + " \t");
-			sb.append(t.getRoute().getRouteName() + " \t");
-			sb.append(t.getTravellerCount() + " \t");
-			sb.append(t.getRoute().getDistanceInKm() + " \t");
+			sb.append(t.getID() + "     ");
+			sb.append(t.getRoute().getRouteName() + "     ");
+			sb.append(t.getTravellerCount() + "     ");
+			sb.append(t.getRoute().getDistanceInKm() + "     ");
 
 			tripInfoAsList.add(sb.toString());
 		}
