@@ -51,7 +51,7 @@ public class CompanysGUI extends JFrame implements ActionListener {
 		setResizable(false);
 		setAutoRequestFocus(false);
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 653, 432);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(72, 61, 139));
@@ -442,6 +442,9 @@ public class CompanysGUI extends JFrame implements ActionListener {
 		if (inpRName.getText().trim().equals("") || inpRAddress.getText().trim().equals("")
 				|| inpRDistance.getText().trim().equals(""))
 			return false;
+		
+		if(DataBaseFunctions.RouteExists(inpRName.getText().trim()))
+			return false;
 
 		if (Integer.valueOf(inpRDistance.getText().trim()) < 1)
 			return false;
@@ -474,15 +477,16 @@ public class CompanysGUI extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == btnAddRoute) {
+			
 			if (isValidRoute()) {
-
-				Data.newRoute(inpRName.getText(), inpRAddress.getText(), Integer.valueOf(inpRDistance.getText()));
+				Data.newRouteDB(inpRName.getText(), inpRAddress.getText(), Integer.valueOf(inpRDistance.getText()));
 				inpRName.setText("");
 				inpRAddress.setText("");
 				inpRDistance.setText("");
 				logManager("Added SucessFully..", true);
 			} else {
 				logManager("Invalid Input or The route already exits!", false);
+				// invalid route JDilog
 			}
 
 		} else if (e.getSource() == btnNewCar) {

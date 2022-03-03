@@ -45,6 +45,22 @@ public abstract class DataBaseFunctions
 		return false;
 	}
 	
+	static boolean RouteExists(String routeName) {
+		if (db.routeExisitsInDB(routeName))
+			return true;
+
+		return false;
+
+	}
+
+	//insertion of new Route
+	
+	static boolean insertRouteDB(String rName, String rAddress, int rDistance)
+	{
+		if(db.insertNewRoute(rName, rAddress,rDistance))
+			return true;
+		return false;
+	}
 	
 	static boolean loadAllData()
 	{

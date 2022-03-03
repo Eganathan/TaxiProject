@@ -130,7 +130,19 @@ public abstract class Data {
 	static boolean newRoute(String routeName, String fullAddress, int distance) {
 		if (routeName == null || fullAddress == null || distance < 0 && !routeExists(routeName))
 			return false;
+		
+		routeInfo.add(new Route(routeName, fullAddress, distance));
+		return true;
+	}
+	
+	static boolean newRouteDB(String routeName, String fullAddress, int distance) {
+		if (routeName == null || fullAddress == null || distance < 0 && !routeExists(routeName))
+			return false;
+		if (DataBaseFunctions.RouteExists(routeName))
+			return false;
 
+		DataBaseFunctions.insertRouteDB(routeName, fullAddress, distance);
+		
 		routeInfo.add(new Route(routeName, fullAddress, distance));
 		return true;
 	}

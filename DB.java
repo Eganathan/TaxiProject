@@ -257,6 +257,7 @@ public class DB {
 	// TRIP DATA
 
 //==================================================================================END OF LOADING DATA ==============	
+	
 
 //==================================================================================INSERTIONS
 
@@ -362,9 +363,57 @@ public class DB {
 		}
 
 	}
-// ======================================================================END OF ROUTE 
+// ======================================================================END OF CAR
+
+	//================================================================INSERTION OF NEW ROUTE
+	boolean insertNewRoute(String rName, String rAddress, int rDistance) {
+		dealConn();
+
+		String sql = "INSERT INTO taxiland.routes VALUES " + " ( '" + rName + "' , " + rDistance + " , '" + rAddress
+				+ "' )";
+
+		Statement statement;
+		try {
+			statement = conn.prepareStatement(sql);
+			statement.execute(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+
+	}
+	// ======================================================================END OF NEW ROUTE
 
 //===================================================================END OF INSERTIONS	
+	
+//===================================================================================== START OF EXISTION
+	
+	boolean routeExisitsInDB(String route) {
+		dealConn();
+
+		boolean isThere = false;
+		String sql = "SELECT COUNT(*) as count FROM taxiland.routes WHERE rName =  '" + route + "'";
+
+		Statement statement;
+		try {
+
+			statement = conn.prepareStatement(sql);
+			ResultSet outputSet = statement.executeQuery(sql);
+			while (outputSet.next()) {
+				if (outputSet.getInt("count") > 0)
+					isThere = true;
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return isThere;
+	}
+	
+	
 	// Deals the SQL query
 	void dealQuery(String sql) {
 		dealConn();

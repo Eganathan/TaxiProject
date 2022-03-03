@@ -25,6 +25,8 @@ truncate customers;
 INSERT INTO taxiland.customers VALUES
 ("a","a",50000 );
 
+SELECT COUNT(*) as count FROM taxiland.customers WHERE cName = 'z';
+
 delete from customers where cName ='lohithan';
 select * from customers;
 
@@ -76,13 +78,17 @@ FOREIGN KEY (tCar) REFERENCES taxiland.cars(carName),
 FOREIGN KEY (tRoute) REFERENCES taxiland.routes(rName),
 FOREIGN KEY (tCustomer) REFERENCES taxiland.customers(cName)
 );
-
+use taxiland;
+ALTER TABLE trips MODIFY COLUMN tTime TIMESTAMP DEFAULT current_timestamp;
 ALTER TABLE trips ADD COLUMN tTravellers int DEFAULT 2;
-
 INSERT INTO trips (tCustomer, tRoute,tCar, tTravellers)values ( "Subash","Auroville Township","TN08-CH0939",5);
-INSERT INTO trips (tCustomer, tRoute,tCar, tTravellers)values ( "Subash","Kilambakkam Bus Terminal","TN49-CB1994",2);
+INSERT INTO taxiland.trips (tCustomer, tRoute,tCar, tTravellers)values 
+( "a" ,"Kilambakkam Bus Terminal","TN49-CB1994",2);
 
-select * from trips;
+truncate taxiland.trips;
+SELECT * FROM taxiland.trips WHERE tCustomer = 'a';
+
+select * from taxiland.trips;
 select * from routes;
 select * from customers;
 
@@ -91,3 +97,4 @@ insert into taxiland.customers values (
 
 -- show trips
 describe  trips;
+describe taxiland.routes;
